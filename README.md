@@ -2,8 +2,6 @@
 
 A full-stack ML demo project that compares classic ML baselines (scikit-learn) vs a simple deep learning model (PyTorch LSTM) for **next-day direction** prediction on stock/ETF daily data.
 
-> ⚠️ Educational project only. Not financial advice.
-
 ## What you get
 - **Backend (FastAPI)**: data fetch, feature engineering, train models, predictions, metrics, and a simple backtest.
 - **Frontend (React + Vite)**: pick ticker/model/date range, view predictions, metrics, and charts.
