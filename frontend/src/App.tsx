@@ -99,7 +99,7 @@ export default function App() {
     <div className="container">
       <div className="card">
         <div className="h1">Stock Forecasting Dashboard</div>
-        <div className="muted">Compare scikit-learn baselines vs a PyTorch LSTM on next-day direction. Educational demo.</div>
+        <div className="muted">Compare scikit-learn baselines vs a PyTorch LSTM on next-day direction.</div>
 
         <div className="controls" style={{ marginTop: 14 }}>
           <div>
