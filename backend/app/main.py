@@ -129,7 +129,7 @@ def predict(req: PredictRequest):
         raise HTTPException(400, "No rows in requested date range (after feature engineering).")
 
     dates = feat.index.astype(str).to_list()
-    close = feat["close"].to_numpy(dtype=np.float32)
+    close = feat["close"].astype(float).to_numpy().ravel().tolist()
 
     if model_name in ("logreg", "gboost"):
         bundle = store.load_sklearn(ticker, model_name)
@@ -159,7 +159,7 @@ def predict(req: PredictRequest):
         ticker=ticker,
         model=model_name,
         dates=dates,
-        close=close.tolist(),
+        close=close,
         prob_up=[float(x) for x in p.tolist()],
         pred_up=pred,
     )
