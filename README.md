@@ -1,68 +1,76 @@
-# Stock Forecasting Dashboard (FastAPI + React)
+# SignalBench
 
-A full-stack ML demo project that compares classic ML baselines (scikit-learn) vs a simple deep learning model (PyTorch LSTM) for **next-day direction** prediction on stock/ETF daily data.
+ML-powered stock signal backtesting platform.
 
-## What you get
-- **Backend (FastAPI)**: data fetch, feature engineering, train models, predictions, metrics, and a simple backtest.
-- **Frontend (React + Vite)**: pick ticker/model/date range, view predictions, metrics, and charts.
+## Project Structure
 
-## Tech
-- Backend: FastAPI, scikit-learn, PyTorch, yfinance, pandas, numpy, joblib
-- Frontend: React, TypeScript, Vite, Recharts
+```
+SignalBench/
+├── backend/                # Backend service
+│   ├── app/               # FastAPI application
+│   │   ├── main.py       # Main application entry point
+│   │   ├── ml/           # ML models and data fetching
+│   │   │   └── data.py
+│   │   ├── models.py     # Database models
+│   │   └── config.py     # Configuration
+│   ├── requirements.txt   # Python dependencies
+│   └── Dockerfile        # Backend container
+├── frontend/              # Frontend application
+├── scripts/               # Utility scripts
+├── docker-compose.yml     # Full stack orchestration
+└── README.md
+```
 
----
+## Setup
 
-## Quickstart
+### Local Development
 
-### 1) Backend
+1. Install dependencies:
 ```bash
 cd backend
-python -m venv .venv
-source .venv/bin/activate
 pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8000
 ```
 
-Backend runs at: `http://localhost:8000`
-
-### 2) Frontend
+2. Run the backend:
 ```bash
-cd frontend
-npm install
-npm run dev
+cd backend
+YF_USE_CURL_CFFI=1 uvicorn app.main:app --reload --port 8000
 ```
 
-Frontend runs at: `http://localhost:5173`
+### Docker
 
----
-
-## API Overview
-- `GET /tickers` -> list supported tickers
-- `POST /train` -> train a model for a ticker
-- `POST /predict` -> predictions for a date range
-- `GET /metrics` -> classification metrics on the test split
-- `GET /backtest` -> simple long/cash backtest based on probability threshold
-
----
-
-## Models
-- `logreg`: Logistic Regression on engineered features
-- `gboost`: Gradient Boosting (HistGradientBoostingClassifier) on engineered features
-- `lstm`: PyTorch LSTM on sequences (lookback window)
-
----
-
-## Project structure
-```
-stock-ml-dashboard/
-  backend/
-  frontend/
+1. Build and run all services:
+```bash
+docker-compose up --build
 ```
 
----
+2. Access the application:
+   - Backend API: http://localhost:8000
+   - Frontend: http://localhost:5173
+   - PostgreSQL: localhost:5432
+   - Redis: localhost:6379
 
-## Notes / Tips
-- This project uses **time-based splits** to reduce leakage.
-- By default, training uses data from 2014-present (based on availability).
-- You can add more tickers in `backend/app/config.py`.
+## Database
+
+Connect to PostgreSQL:
+```bash
+docker-compose exec postgres psql -U app -d signalbench
+```
+
+View tables:
+```sql
+\dt
+```
+
+## API Documentation
+
+Once running, visit:
+- Swagger UI: http://localhost:8000/docs
+- ReDoc: http://localhost:8000/redoc
+
+## Environment Variables
+
+- `YF_USE_CURL_CFFI=1` - Required for yfinance to work properly
+- `DATABASE_URL` - PostgreSQL connection string
+- `REDIS_URL` - Redis connection string
 

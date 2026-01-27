@@ -1,14 +1,65 @@
 version: "3.9"
+
 services:
+  postgres:
+    image: postgres:16
+    container_name: signalbench-postgres
+    environment:
+      POSTGRES_USER: signalbench
+      POSTGRES_PASSWORD: signalbench
+      POSTGRES_DB: signalbench
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U signalbench"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: signalbench-redis
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   backend:
     build: ./backend
+    container_name: signalbench-backend
     ports:
       - "8000:8000"
     environment:
       - PYTHONUNBUFFERED=1
+      - DATABASE_URL=postgresql+asyncpg://signalbench:signalbench@postgres:5432/signalbench
+      - REDIS_URL=redis://redis:6379/0
+      - YF_USE_CURL_CFFI=1
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./backend/app:/app/app
+    restart: unless-stopped
+
   frontend:
     build: ./frontend
+    container_name: signalbench-frontend
     ports:
       - "5173:5173"
     depends_on:
       - backend
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  redisdata:

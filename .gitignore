@@ -1,7 +1,61 @@
-**/.venv
-**/__pycache__
-**/*.pyc
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Database
+*.db
+*.sqlite3
+pgdata/
+
+# Environment variables
+.env
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Model files
+*.pkl
+*.joblib
+*.h5
+*.pt
+*.pth
+
+# Data
+data/
+*.csv
+
+# Docker
+docker-compose.override.yml
+
+# Redis
+redisdata/
+
 backend/app/artifacts
 frontend/node_modules
 frontend/dist
-.DS_Store
